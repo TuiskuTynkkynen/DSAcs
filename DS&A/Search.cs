@@ -2,7 +2,7 @@ using System;
 
 namespace CS50
 {
-    class Seacrh
+    class Search
     {
         public static void SearchMain()
         {

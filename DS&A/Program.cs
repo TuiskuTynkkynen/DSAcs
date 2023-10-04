@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CS50
 {
@@ -6,7 +7,21 @@ namespace CS50
     {
         static void Main(string[] args)
         {
-            Sort.SortMain();
+            Console.WriteLine("Select program: Datatypes, Search, Sort");
+            string input = Console.ReadLine();
+
+            switch (input)
+            {
+                case "Datatypes":
+                    Datatypes.DTMain();
+                    break;
+                case "Search":
+                    Search.SearchMain();
+                    break;
+                case "Sort":
+                    Sort.SortMain();
+                    break;
+
+            }
         }
-    }
 }

@@ -59,7 +59,7 @@ namespace CS50
         }
 
         public static void SortMain(){
-            Console.WriteLine("Select sort: Selection, Bubble");
+            Console.WriteLine("Select sort: Selection, Bubble, Merge");
             string input = Console.ReadLine();
 
             Console.WriteLine("Num of ints:");
@@ -72,6 +72,9 @@ namespace CS50
                     break;
                 case "Bubble":
                     PrintArr(Bubble(nums));
+                    break;
+                case "Merge":
+                    PrintArr(Merge(nums));
                     break;
                 default:
                     Console.WriteLine("Incorrect Input");
@@ -190,7 +193,7 @@ namespace CS50
                     }
                 }
                 
-                return A;
+                return B;
             }
         }
     }

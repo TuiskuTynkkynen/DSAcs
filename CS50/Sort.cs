@@ -9,9 +9,9 @@ namespace CS50
 {
     class Sort
     {
-        public static void SortMain() {
-            //TODO merge sort
-            //TODO datatypes: linked list, binary tree, hash map
+        //TODO merge sort
+        //TODO datatypes: linked list, binary tree, hash map
+        public static void TestSortMain() {
 
             long snms = 0;
             long srms = 0;
@@ -58,7 +58,7 @@ namespace CS50
             }
         }
 
-        public static void OldSortMain(){
+        public static void SortMain(){
             Console.WriteLine("Select sort: Selection, Bubble");
             string input = Console.ReadLine();
 
@@ -152,6 +152,47 @@ namespace CS50
             }
 
             return array;
+        }
+
+        static int[] Merge(int[] array)
+        {
+            int length = array.Length;
+            int[] temp = new int[length];
+
+            for(int i = 0; i < length; i++){
+                temp[i] = array[i];
+            }
+            return split(array, 0, length, temp);
+
+            return array;
+
+            static int[] split(int[] B, int begin, int end, int[] A)
+            {
+            //sort left
+            //sort right 
+            //merge
+                
+                if(end - begin > 1) {
+                    int middle = (begin + end) / 2;
+                    split(A, begin, middle, B);
+                    split(A, middle, end, B);
+
+                    int i = begin;
+                    int j = middle;
+
+                    for (int k = begin; k < end; k++) {
+                        if (i < middle && (j >= end || A[i] <= A[j])) {
+                            B[k] = A[i];
+                            i++;
+                        } else {
+                            B[k] = A[j];
+                            j++;
+                        }
+                    }
+                }
+                
+                return A;
+            }
         }
     }
 }

@@ -164,19 +164,18 @@ namespace CS50
             }
             return split(array, 0, length, temp);
 
-            return array;
-
             static int[] split(int[] B, int begin, int end, int[] A)
             {
-            //sort left
-            //sort right 
-            //merge
                 
                 if(end - begin > 1) {
                     int middle = (begin + end) / 2;
+                    
+                    //sort left
                     split(A, begin, middle, B);
+                    //sort right 
                     split(A, middle, end, B);
 
+                    //merge
                     int i = begin;
                     int j = middle;
 

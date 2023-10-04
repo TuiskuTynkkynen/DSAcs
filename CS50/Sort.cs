@@ -16,8 +16,7 @@ namespace CS50
                 Console.WriteLine("Select function: Test, Race, Exit");
                 string input = Console.ReadLine();
 
-                switch (input)
-                {
+                switch (input) {
                     case "Test":
                         AlgoTest();
                         break;
@@ -93,8 +92,7 @@ namespace CS50
             }
         }
 
-        static int[] GenerateArr(int length, bool isRandom)
-        {
+        static int[] GenerateArr(int length, bool isRandom) {
             int[] nums = new int[length];
             Random random = new();
             int temp;
@@ -169,8 +167,7 @@ namespace CS50
             return array;
         }
 
-        static int[] Merge(int[] array)
-        {
+        static int[] Merge(int[] array) {
             int length = array.Length;
             int[] temp = new int[length];
 
@@ -179,8 +176,7 @@ namespace CS50
             }
             return split(array, 0, length, temp);
 
-            static int[] split(int[] B, int begin, int end, int[] A)
-            {
+            static int[] split(int[] B, int begin, int end, int[] A) {
                 
                 if(end - begin > 1) {
                     int middle = (begin + end) / 2;

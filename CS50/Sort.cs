@@ -10,6 +10,9 @@ namespace CS50
     class Sort
     {
         public static void SortMain() {
+            //TODO merge sort
+            //TODO datatypes: linked list, binary tree, hash map
+
             long snms = 0;
             long srms = 0;
             long bnms = 0;

@@ -11,7 +11,30 @@ namespace CS50
     class Sort
     {
         //TODO datatypes: linked list, binary tree, hash map
-        public static void SortMain() {
+        public static void SortMain(){
+            while (true) {
+                Console.WriteLine("Select function: Test, Race, Exit");
+                string input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case "Test":
+                        AlgoTest();
+                        break;
+                    case "Race":
+                        AlgoRace();
+                        break;
+                    case "Exit":
+                        return;
+                        break;
+                    default:
+                        Console.WriteLine("Incorrect Input");
+                        break;
+                }
+                Console.WriteLine();
+            }
+        }
+        public static void AlgoRace() {
 
             Console.WriteLine("Num of ints:");
             int num = int.Parse(Console.ReadLine());
@@ -44,39 +67,9 @@ namespace CS50
                 stopWatch.Stop(); 
                 return stopWatch.ElapsedMilliseconds;
             }
-
-            static long TestSelection(bool rand, int num)
-            {
-                Stopwatch stopWatch = new();
-                int[] nums = GenerateArr(num, rand);
-                stopWatch.Start();
-                Selection(nums);
-                stopWatch.Stop();
-                return stopWatch.ElapsedMilliseconds;
-            }
-
-            static long TestBubble(bool rand, int num)
-            {
-                Stopwatch stopWatch = new();
-                int[] nums = GenerateArr(num, rand);
-                stopWatch.Start();
-                Bubble(nums);
-                stopWatch.Stop();
-                return stopWatch.ElapsedMilliseconds;
-            }
-
-            static long TestMerge(bool rand, int num)
-            {
-                Stopwatch stopWatch = new();
-                int[] nums = GenerateArr(num, rand);
-                stopWatch.Start();
-                Merge(nums);
-                stopWatch.Stop();
-                return stopWatch.ElapsedMilliseconds;
-            }
         }
 
-        public static void OldSortMain(){
+        public static void AlgoTest(){
             Console.WriteLine("Select sort: Selection, Bubble, Merge");
             string input = Console.ReadLine();
 
@@ -125,8 +118,9 @@ namespace CS50
 
         static void PrintArr(int[] array){
             for (int i = 0; i < array.Length; i++){
-                Console.WriteLine(array[i]);
+                Console.Write(array[i]);
             }
+            Console.WriteLine();
         }
 
         static int[] Selection(int[] array){

@@ -4,38 +4,46 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace CS50
 {
     class Sort
     {
-        //TODO merge sort
         //TODO datatypes: linked list, binary tree, hash map
-        public static void TestSortMain() {
-
-            long snms = 0;
-            long srms = 0;
-            long bnms = 0;
-            long brms = 0;
+        public static void SortMain() {
 
             Console.WriteLine("Num of ints:");
             int num = int.Parse(Console.ReadLine());
             Console.WriteLine("Num of reps:");
             int reps = int.Parse(Console.ReadLine());
+            Console.WriteLine("Select algorithms: Selection, Bubble, Merge");
+            string[] names = Console.ReadLine().Split(", ");
+
+            long[] randoms = new long[names.Length];
+            long[] nonrandoms = new long[names.Length];
 
             for (int i = 0; i < reps; i++) {
                 Console.Write("rep: " + i + "... ");
-                srms += TestSelection(true, num);
-                snms += TestSelection(false, num);
-                brms += TestBubble(true, num);
-                bnms += TestBubble(false, num);
+                for (int j = 0; j < names.Length; j++) {
+                    randoms[j] += Test(names[j], GenerateArr(num, true));
+                    nonrandoms[j] += Test(names[j], GenerateArr(num, false));
+                }
             }
             Console.WriteLine();
-            Console.WriteLine("Selection random:" + (srms/reps));
-            Console.WriteLine("Selection sorted:" + (snms/reps));
-            Console.WriteLine("Bubble random:" + (brms/reps));
-            Console.WriteLine("Bubble sorted:" + (bnms/reps));
+            for (int j = 0; j < names.Length; j++)
+            {
+                Console.WriteLine(names[j] + " random: " + (randoms[j] / reps) + "ms sorted: " + (nonrandoms[j] / reps) + "ms");
+            }
 
+            static long Test(string name, int[] array)
+            {
+                Stopwatch stopWatch = new();
+                stopWatch.Start();
+                typeof(Sort).GetMethod(name, BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new [] {array});
+                stopWatch.Stop(); 
+                return stopWatch.ElapsedMilliseconds;
+            }
 
             static long TestSelection(bool rand, int num)
             {
@@ -56,9 +64,19 @@ namespace CS50
                 stopWatch.Stop();
                 return stopWatch.ElapsedMilliseconds;
             }
+
+            static long TestMerge(bool rand, int num)
+            {
+                Stopwatch stopWatch = new();
+                int[] nums = GenerateArr(num, rand);
+                stopWatch.Start();
+                Merge(nums);
+                stopWatch.Stop();
+                return stopWatch.ElapsedMilliseconds;
+            }
         }
 
-        public static void SortMain(){
+        public static void OldSortMain(){
             Console.WriteLine("Select sort: Selection, Bubble, Merge");
             string input = Console.ReadLine();
 

@@ -1,55 +1,99 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
+﻿using System.Runtime.InteropServices;
 
-namespace CS50
+namespace DSA
 {
     internal class Datatypes
     {
-        //TODO datatypes: add linked list methods(binary search?), binary tree, hash map
         public static void DTMain(){
-            LinkedList<int> list = new();
+            Console.WriteLine("Create linked list of type: Short, Int, Long, Float or Exit");
             
             while (true)
             {
-                Console.WriteLine("Select function: Add, Remove, Count, Contains, Index, Value, Print, Free");
-                string input = Console.ReadLine();
-                int num;
+                string? input = Console.ReadLine();
+                switch(input)
+                {
+                    case "Short":
+                        LinkedList<short> shortList = new();
+                        FunctionSelector<short>(ref shortList);
+                        return;
+                    case "Int":
+                        LinkedList<int> intList = new();
+                        FunctionSelector<int>(ref intList);
+                        return;
+                    case "Long":
+                        LinkedList<long> longList = new();
+                        FunctionSelector<long>(ref longList);
+                        return;
+                    case "Float":
+                        LinkedList<float> floatList = new();
+                        FunctionSelector<float>(ref floatList);
+                        return;
+                    case "Exit":
+                        return;
+                    default:
+                        Console.WriteLine("Incorrect Input");
+                        break;
+                }
+            }
+        }
+        
+        private static void FunctionSelector<T>(ref LinkedList<T> list) where T : struct
+        {
+            while (true)
+            {
+                Console.WriteLine("Select function: Add, Remove, Count, Contains, Index, Value, Print, Free, Exit");
+                string? input = Console.ReadLine();
+                T? value;
 
                 switch (input)
                 {
                     case "Add":
-                        Console.WriteLine("Int to be added:");
-                        num = int.Parse(Console.ReadLine());
-                        list.Add(num);
+                        Console.WriteLine("Value to be added:");
+                        value = Parse<T>(Console.ReadLine());
+                        if (value == null)
+                        {
+                            Console.WriteLine("Value was not in correct format");
+                            break;
+                        }
+                        list.Add((T)value);
                         break;
                     case "Remove":
-                        Console.WriteLine("Int to be removed:");
-                        num = int.Parse(Console.ReadLine());
-                        list.Remove(num);
+                        Console.WriteLine("Value to be removed:");
+                        value = Parse<T>(Console.ReadLine());
+                        if (value == null)
+                        {
+                            Console.WriteLine("Value was not in correct format");
+                            break;
+                        }
+                        list.Remove((T)value);
                         break;
                     case "Count":
                         Console.WriteLine("Count = " + list.Count);
                         break;
                     case "Contains":
-                        Console.WriteLine("Int to be checked:");
-                        num = int.Parse(Console.ReadLine());
-                        Console.WriteLine(list.Contains(num));
+                        Console.WriteLine("Value to be checked:");
+                        value = Parse<T>(Console.ReadLine());
+                        if (value == null)
+                        {
+                            Console.WriteLine("Value was not in correct format");
+                            break;
+                        }
+                        Console.WriteLine(list.Contains((T)value));
                         break;
                     case "Index":
-                        Console.WriteLine("Int to get index of:");
-                        num = int.Parse(Console.ReadLine());
-                        Console.WriteLine("Index = " + list.Index(num));
+                        Console.WriteLine("Value to get index of:");
+                        value = Parse<T>(Console.ReadLine());
+                        if (value == null)
+                        {
+                            Console.WriteLine("Value was not in correct format");
+                            break;
+                        }
+                        Console.WriteLine("Index = " + list.Index((T)value));
                         break;
                     case "Value":
                         Console.WriteLine("Index to get value of:");
-                        num = int.Parse(Console.ReadLine());
-                        Console.WriteLine("Value = " + list.Value(num));
+                        int index = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Value = " + list.Value(index));
                         break;
                     case "Print":
                         list.Print();
@@ -58,14 +102,28 @@ namespace CS50
                         list.Free();
                         break;
                     case "Exit":
-                        list.Free();
+                        if(list.GCH.IsAllocated)
+                        {
+                            list.Free();
+                        }
                         return;
-                        break;
                     default:
                         Console.WriteLine("Incorrect Input");
                         break;
                 }
                 Console.WriteLine();
+            }
+        }
+
+        private static T? Parse<T>(string input) where T : struct
+        {
+            try
+            {
+                return (T)Convert.ChangeType(input, typeof(T));
+            }
+            catch
+            {
+                return default;
             }
         }
         
@@ -74,42 +132,35 @@ namespace CS50
             public Node<T>* List { get; set; }
             public GCHandle GCH { get; set; }
 
-                /*Node* prev = List; 
-                for (int i = 1; i < num; i++){
-                    Node next = new(value);
-                    prev->GCH = GCHandle.Alloc(next, GCHandleType.Pinned);
-                    prev->Next = (Node*)prev->GCH.AddrOfPinnedObject();
-                    prev = prev->Next;
-                }
-                */
-            
-
             public readonly int Count{
                 get{
-                    int x = 1;
+                    int count = 1;
                     Node<T>* node = this.List;
                     if (node == null) { return 0; }
                     while (node->Next != null)
                     {
                         node = node->Next;
-                        x++;
+                        count++;
                     }
 
-                    return x;
+                    return count;
                 }
             }
             public void Add(T val){
                 Node<T>* node = this.List;
                 Node<T> newnode = new(val);
+                
                 if (node == null) { 
                     this.GCH = GCHandle.Alloc(newnode, GCHandleType.Pinned);
                     this.List = (Node<T>*)this.GCH.AddrOfPinnedObject();
                     return;
                 }
+
                 while (node->Next != null)
                 {
                     node = node->Next;
                 }
+
                 node->GCH = GCHandle.Alloc(newnode, GCHandleType.Pinned);
                 node->Next = (Node<T>*)node->GCH.AddrOfPinnedObject();
             }
@@ -122,9 +173,14 @@ namespace CS50
 
                     this.List = node->Next;
                     this.GCH = node->GCH;
-                } else if (index != null) {
+                }
+                else if (index != null) 
+                {
                     Node<T>* node = this.List;
                     for (int i = 0; i < index-1; i++)
+                    {
+                        node = node->Next;
+                    }
                     node->GCH.Free();
                     node->GCH = node->Next->GCH;
                     node->Next = node->Next->Next;
@@ -134,9 +190,12 @@ namespace CS50
             public readonly bool Contains(T val)
             {
                 Node<T>* node = this.List;
-                if (node == null) { return false; }
+                if (node == null) {
+                    Console.WriteLine("List is empty");
+                    return false; 
+                }
 
-                while (node->Next != null)
+                while (node != null)
                 {
                     if (node->Value.Equals(val))
                     {
@@ -160,17 +219,21 @@ namespace CS50
             public readonly int? Index(T val)
             {
                 Node<T>* node = this.List;
-                if (node == null) { return null; }
-                int x = 0;
+                if (node == null) {
+                    Console.WriteLine("List is empty");
+                    return null; 
+                }
 
-                while (node->Next != null)
+                int index = 0;
+
+                while (node != null)
                 {
                     if (node->Value.Equals(val))
                     {
-                        return x;
+                        return index;
                     }
                     node = node->Next;
-                    x++;
+                    index++;
                 }
                 return null;
             }
@@ -179,9 +242,10 @@ namespace CS50
             {
                 Node<T>* node = this.List;
                 if (node == null) {  Console.WriteLine("List is empty"); return; }
+                
                 Console.Write("Linked list: ");
                 while (node->Next != null) {
-                    Console.Write(node->Value + ", ");
+                    Console.Write(node->Value + " ");
                     node = node->Next;
                 }
                 Console.Write(node->Value);
@@ -189,17 +253,22 @@ namespace CS50
             }
 
 
-            public readonly void Free() {
+            public void Free() {
                 Node<T>* node = this.List;
+                this.List = null;
                 if (node == null) { return; }
+                
                 this.GCH.Free();
-                while (node->Next != null) {
+                
+                while (node != null) {
                     Node<T>* tmp = node->Next;
-                    node->GCH.Free();
+                    if (node->GCH.IsAllocated)
+                    {
+                        node->GCH.Free();
+                    }
                     node->Next = null;
                     node = tmp;
                 }
-                GC.Collect();
             }
 
             public struct Node<U>{

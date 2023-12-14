@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CS50
+﻿namespace DSA
 {
     class Program
     {

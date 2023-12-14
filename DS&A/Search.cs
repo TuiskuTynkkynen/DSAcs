@@ -1,29 +1,19 @@
-using System;
-
-namespace CS50
+namespace DSA
 {
     class Search
     {
         public static void SearchMain()
         {
-            Console.WriteLine("Select search: OInt, !OInt, String, Contact");
+            Console.WriteLine("Select search: Ordered Int, Unordered Int, String, Contact, Exit");
             string input = Console.ReadLine();
             
             switch (input)
             {
-                case "!OInt":
-                    int[] UOnums = { 4, 6, 1, 0, 10, 3 };
-                    UnorderedInt(UOnums);
+                case "Unordered Int":
+                    UnorderedInt();
                     break;
-                case "OInt":
-                    Console.WriteLine("Num of ints:");
-                    int Onum = int.Parse(Console.ReadLine());
-                    int[] Onums = new int[Onum];
-                    for (int i = 0; i < Onum; i++)
-                    {
-                        Onums[i] = i;
-                    }
-                    OrderedInt(Onum, Onums);
+                case "Ordered Int":
+                    OrderedInt();
                     break;
                 case "String":
                     String();
@@ -31,70 +21,85 @@ namespace CS50
                 case "Contact":
                     Contacts();
                     break;
+                case "Exit":
+                    return;
                 default:
                     Console.WriteLine("Incorrect Input");
                     break;
             }
         }
 
-        static void UnorderedInt(int[] nums)
+        static void UnorderedInt()
         {
-            Console.WriteLine("Int to be found");
+            int[] nums = { 4, 6, 1, 0, 10, 3 };
+
+            Console.WriteLine("Int to be found in list 4, 6, 1, 0, 10, 3");
             int find = int.Parse(Console.ReadLine());
 
             for (int i = 0; i < nums.Length; i++)
             {
                 if (nums[i] == find)
                 {
-                    Console.WriteLine("Found");
+                    Console.WriteLine($"Found at index {i}");
                     return;
                 }
             }
             Console.WriteLine("Not found");
         }
-        static void OrderedInt(int num, int[] nums)
+      
+        static void OrderedInt()
         {
+            Console.WriteLine("Num of ints:");
+            int num = int.Parse(Console.ReadLine());
+            int[] nums = new int[num];
+            for (int i = 0; i < num; i++)
+            {
+                nums[i] = i;
+            }
+
             Console.WriteLine("Int to be found:");
             int find = int.Parse(Console.ReadLine());
 
+            if (find < 0 || find >= num) {
+                Console.WriteLine("Out of bounds");
+                return; 
+            }
 
-            while (true)
+            int lower = 0;
+            int upper = num - 1;
+            int middle = -1;
+            bool found = false;
+
+            while (lower <= upper && !found)
             {
-                if (find < 0 && find < num) {
-                    Console.WriteLine("Out of bounds");
-                    return; 
-                }
-                int x = num / 2;
-                int i;
-                for (i = 2; i <= num; i++)
+                middle = (lower + upper) / 2;
+                if (find < nums[middle])
                 {
-                    if (nums[x] > find)
-                    {
-                        Console.WriteLine(i + "/" + (2 * i) );
-                        x -= num / (2*i);
-                        continue;
-                    }
-                    else if (nums[x] < find)
-                    {
-                        x += num / (2*i);
-                        continue;
-                    }
-                    Console.WriteLine("Found");
-                    i = num + 1;
+                    upper = middle - 1;
                 }
+                else if(find > nums[middle])
+                {
+                    lower = middle + 1;
+                }
+                else
+                {
+                    found = true;
+                }
+            }
 
-                if (i <= num)
-                {
-                    Console.WriteLine("Not found");
-                }
-                Console.WriteLine("Int to be found:");
-                find = int.Parse(Console.ReadLine());
+            if (found)
+            {
+                Console.WriteLine($"Found at position {middle}");
+            } 
+            else
+            {
+                Console.WriteLine($"Not found");
             }
         }
 
         static void String()
         {
-            Console.WriteLine("String to be found");
+            Console.WriteLine("String to be found in list \"Bill\", \"Charlie\", \"Fred\", \"Ginny\", \"Percy\", \"Ron\"");
             string find = Console.ReadLine();
 
             string[] names = {"Bill", "Charlie", "Fred", "Ginny", "Percy", "Ron"};
@@ -102,7 +107,7 @@ namespace CS50
             {
                 if (names[i].Equals(find))
                 {
-                    Console.WriteLine("Found");
+                    Console.WriteLine($"Found at index {i}");
                     return;
                 }
             }
@@ -110,7 +115,7 @@ namespace CS50
         }
 
         static void Contacts() {
-            Console.WriteLine("Name of contact");
+            Console.WriteLine("Name of contact in list \"Bill\", \"Charlie\", \"Fred\"");
             string find = Console.ReadLine();
 
             People[] peeps = new People[3];

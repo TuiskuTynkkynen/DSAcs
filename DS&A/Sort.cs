@@ -1,31 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using System.Reflection;
 
-namespace CS50
+namespace DSA
 {
     class Sort
     {
-        //TODO datatypes: linked list, binary tree, hash map
         public static void SortMain(){
             while (true) {
-                Console.WriteLine("Select function: Test, Race, Exit");
+                Console.WriteLine("Select function: Test, Benchmark, Exit");
                 string input = Console.ReadLine();
 
                 switch (input) {
                     case "Test":
                         AlgoTest();
                         break;
-                    case "Race":
-                        AlgoRace();
+                    case "Benchmark":
+                        AlgoBenchmark();
                         break;
                     case "Exit":
                         return;
-                        break;
                     default:
                         Console.WriteLine("Incorrect Input");
                         break;
@@ -33,29 +26,41 @@ namespace CS50
                 Console.WriteLine();
             }
         }
-        public static void AlgoRace() {
+        public static void AlgoBenchmark() {
 
+            Console.WriteLine("Note: benchmark result includes timte to create array\n");
             Console.WriteLine("Num of ints:");
             int num = int.Parse(Console.ReadLine());
             Console.WriteLine("Num of reps:");
             int reps = int.Parse(Console.ReadLine());
-            Console.WriteLine("Select algorithms: Selection, Bubble, Merge");
+            Console.WriteLine("Select algorithms: Selection, Bubble, Merge (Seperated by \",\")");
             string[] names = Console.ReadLine().Split(", ");
 
             long[] randoms = new long[names.Length];
             long[] nonrandoms = new long[names.Length];
 
+            Console.Write($"rep:\t");
             for (int i = 0; i < reps; i++) {
-                Console.Write("rep: " + i + "... ");
+                Console.CursorLeft = 5;
+                Console.Write($"{i}");
                 for (int j = 0; j < names.Length; j++) {
                     randoms[j] += Test(names[j], GenerateArr(num, true));
                     nonrandoms[j] += Test(names[j], GenerateArr(num, false));
                 }
             }
-            Console.WriteLine();
+
+            Console.WriteLine("\nSort      │total     │unordered │ordered ");
+            Console.WriteLine("──────────┼──────────┼──────────┼──────────");
             for (int j = 0; j < names.Length; j++)
             {
-                Console.WriteLine(names[j] + " random: " + (randoms[j] / reps) + "ms sorted: " + (nonrandoms[j] / reps) + "ms");
+                Console.Write(names[j]);
+                Console.CursorLeft = 10;
+                Console.Write("│" + (randoms[j] + nonrandoms[j]));
+                Console.CursorLeft = 21;
+                Console.Write("│" + randoms[j] / reps);
+                Console.CursorLeft = 32;
+                Console.Write("│" + nonrandoms[j] / reps);
+                Console.WriteLine();
             }
 
             static long Test(string name, int[] array)
@@ -116,7 +121,7 @@ namespace CS50
 
         static void PrintArr(int[] array){
             for (int i = 0; i < array.Length; i++){
-                Console.Write(array[i]);
+                Console.Write($"{array[i]}, ");
             }
             Console.WriteLine();
         }
